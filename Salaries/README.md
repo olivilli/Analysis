@@ -2,14 +2,7 @@ The dataset used for this analysis was sourced from [Kaggle](https://www.kaggle.
 
 I want to put my statistics knowledge into practice. I'll start with the minimum, maximum, and mean, then find the standard deviation and z-score, and recalculate them. Of course, I'll also look for new clues in the process.
 
- Count  | 3 755   |
---------|---------|
- Max    | 450 000 |  
- Min    | 5 132   |  
- Avg    | 137 570 |
- Median | 135 000 |
-
-
+![screenshot](https://github.com/olivilli/Analysis/blob/main/Salaries/ordinary.png)
 
 I also calculated the median in two ways: one that I came up with myself and another using the special PERCENTILE_CONT function (thanks Google).
 The result is the same - 135,000.
@@ -55,7 +48,7 @@ FROM salaries
 )
 
 SELECT COUNT (*), MIN(salary_in_usd),
-MAX(salary_in_usd), ROUND(AVG(salary_in_usd)),
+MAX(salary_in_usd), ROUND(AVG(salary_in_usd)) as avg,
 PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY salary_in_usd) 
 FROM ( SELECT salary_in_usd, (s.salary_in_usd - a.avg)/a.stddev as z_score
 FROM salaries s, a
@@ -63,13 +56,8 @@ WHERE ABS((s.salary_in_usd - a.avg)/a.stddev)<= 2
 ORDER BY z_score DESC )
 ```
 
- Count  | 3 755   | 3 618   |
---------|---------|---------|
- Max    | 450 000 | 262 500 |
- Min    | 5 132   | 12 000  |
- Avg    | 137 570 | 133 411 |
- Median | 135 000 | 133 250 |
+![screenshot](https://github.com/olivilli/Analysis/blob/main/Salaries/with_z_score.png)
 
- The maximum and minimum changed a lot, but the mean and median changed by less than 5% and standard deviation decreased by 12.5%. These changes are not significant.
+Despite the fact that the minimum and maximum values changed by almost a factor of two, the mean and median remained nearly unchanged. This means that outliers affected the range but did not influence the overall data trends. This may indicate that the data distribution was relatively stable and that the outliers were isolated cases rather than a systemic issue.
 
 
